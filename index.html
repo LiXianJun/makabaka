@@ -34,66 +34,100 @@
   <!-- This script adds the flutter initialization JS code -->
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
+    const serviceWorkerVersion = "1617831359";
   </script>
   <script src="flutter.js" defer></script>
-
-
   <script>
- console.log("This is the production environment");
-const mainJsUrl = 'https://py.makabaka.site/v1/proxy?quest=https%3A%2F%2Fweb.makabaka.site%2Fmain.dart.min.js'; // 主文件地址
-console.log("This is the production environment");
-const localStorageKey = 'cached_main_js'; // 缓存键，存储文件内容
-const localStorageNameKey = 'cached_main_js_name'; // 缓存键，存储文件名称
+	console.log("This is the production environment");
+	const mainJsUrl = 'main.dart.min.js'; // 主文件地址
+	const localStorageKey = 'cached_main_js'; // 缓存键，存储文件内容
+	const localStorageNameKey = 'cached_main_js_name'; // 缓存键，存储文件名称
 
-async function fetchNetworkFileContent(url) {
+         const parts = [
+            'https://api.makabaka.site/cdn/part1.js',
+            'https://api.makabaka.site/cdn/part2.js',
+            'https://api.makabaka.site/cdn/part3.js',
+        ];
+
+        let loadedParts = [];
+        let totalParts = parts.length;
+        function loadPart(index) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'text';
+        xhr.open('GET', parts[index], true);
         xhr.onload = () => {
             if (xhr.status === 200) {
-                resolve(xhr.responseText); // 返回文件内容
+                loadedParts[index] = xhr.responseText;
+                resolve();
             } else {
-                reject(new Error(`加载失败: ${url}`));
+                console.log('加载失败');
+                handleLoadError(parts[index]);
+                reject(new Error(`加载失败: ${parts[index]}`));
             }
         };
-        xhr.onerror = () => reject(new Error(`请求错误: ${url}`));
+        xhr.onerror = () => {
+            console.log('请求错误');
+            handleLoadError(parts[index]);
+            reject(new Error(`请求错误: ${parts[index]}`));
+        };
         xhr.send();
     });
 }
-
-async function loadMainJs() {
+       async function loadAllParts() {
+        const loadPromises = parts.map((_, index) => loadPart(index));
+       try {
+           await Promise.all(loadPromises);
+           // 所有部分已加载完成，拼接并插入
+           const completeScript = loadedParts.join('');
+           return completeScript; // 返回文件内容
+       } catch (error) {
+           console.error(error);
+            // 删除缓存
+            localStorage.removeItem(localStorageKey);
+            localStorage.removeItem(localStorageNameKey);
+           var scriptTag = document.createElement('script');
+           scriptTag.src = 'https://api.makabaka.site/cdn/main.dart.min.js';
+           scriptTag.type = 'application/javascript';
+           document.head.append(scriptTag);
+       }
+}
+		async function loadMainJs() {
     try {
         const cachedFile = localStorage.getItem(localStorageKey);
         const cachedName = localStorage.getItem(localStorageNameKey);
 
         // 检查缓存的名称是否与当前文件名称相同
-        if (cachedFile && cachedName === mainJsUrl) {
-            console.log('加载本地缓存的main.dart.min.js');
-            insertScript(cachedFile);
-        } else {
+		if (cachedFile && cachedFile.length > 512000 && cachedName === mainJsUrl) {
+			console.log('加载本地缓存的main.dart.min.js');
+			insertScript(cachedFile);
+		} else {
             console.log('加载网络文件并缓存');
             // 加载网络文件内容
-            const networkFileContent = await fetchNetworkFileContent(mainJsUrl);
+            const networkFileContent = await loadAllParts();
             // 将网络文件内容和名称缓存
             localStorage.setItem(localStorageKey, networkFileContent);
             localStorage.setItem(localStorageNameKey, mainJsUrl);
-            insertScript(networkFileContent);
+			insertScript(networkFileContent);
         }
     } catch (error) {
         console.error(error);
-        // 如果出错，加载主文件的网络版本
-        const scriptTag = document.createElement('script');
-        scriptTag.src = mainJsUrl;
-        scriptTag.type = 'application/javascript';
-        document.head.append(scriptTag);
+        console.log('加载网络文件error');
+       handleLoadError();
     }
 }
 
 function insertScript(content) {
     const scriptTag = document.createElement('script');
     scriptTag.text = content;
+    document.head.append(scriptTag);
+}
+function handleLoadError() {
+    // 在加载失败时执行的操作
+    localStorage.removeItem(localStorageKey);
+    localStorage.removeItem(localStorageNameKey);
+    var scriptTag = document.createElement('script');
+    scriptTag.src = 'https://api.makabaka.site/cdn/main.dart.min.js';
+    scriptTag.type = 'application/javascript';
     document.head.append(scriptTag);
 }
 
