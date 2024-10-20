@@ -40,30 +40,12 @@
 
 
   <script>
-    console.log("This is the production environment");
+ console.log("This is the production environment");
 const mainJsUrl = 'https://py.makabaka.site/v1/proxy?quest=https%3A%2F%2Fweb.makabaka.site%2Fmain.dart.min.js'; // 主文件地址
-const localStorageKey = 'cached_main_js'; // 缓存键
-const localStorageLengthKey = 'cached_main_js_length'; // 缓存的文件长度键
+console.log("This is the production environment");
+const localStorageKey = 'cached_main_js'; // 缓存键，存储文件内容
+const localStorageNameKey = 'cached_main_js_name'; // 缓存键，存储文件名称
 
-// 只获取文件的长度
-async function fetchNetworkFileLength(url) {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('HEAD', url, true); // 使用HEAD请求只获取文件头信息
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                const contentLength = xhr.getResponseHeader('Content-Length');
-                resolve(contentLength); // 只返回文件长度
-            } else {
-                reject(new Error(`加载失败: ${url}`));
-            }
-        };
-        xhr.onerror = () => reject(new Error(`请求错误: ${url}`));
-        xhr.send();
-    });
-}
-
-// 获取完整文件内容
 async function fetchNetworkFileContent(url) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -84,22 +66,19 @@ async function fetchNetworkFileContent(url) {
 async function loadMainJs() {
     try {
         const cachedFile = localStorage.getItem(localStorageKey);
-        const cachedLength = localStorage.getItem(localStorageLengthKey);
+        const cachedName = localStorage.getItem(localStorageNameKey);
 
-        // 获取网络文件的长度
-        const networkFileLength = await fetchNetworkFileLength(mainJsUrl);
-
-        // 对比缓存长度和网络文件长度
-        if (cachedFile && cachedLength == networkFileLength) {
+        // 检查缓存的名称是否与当前文件名称相同
+        if (cachedFile && cachedName === mainJsUrl) {
             console.log('加载本地缓存的main.dart.min.js');
             insertScript(cachedFile);
         } else {
             console.log('加载网络文件并缓存');
             // 加载网络文件内容
             const networkFileContent = await fetchNetworkFileContent(mainJsUrl);
-            // 将网络文件内容和长度缓存
+            // 将网络文件内容和名称缓存
             localStorage.setItem(localStorageKey, networkFileContent);
-            localStorage.setItem(localStorageLengthKey, networkFileLength);
+            localStorage.setItem(localStorageNameKey, mainJsUrl);
             insertScript(networkFileContent);
         }
     } catch (error) {
