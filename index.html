@@ -37,81 +37,9 @@
     const serviceWorkerVersion = null;
   </script>
   <script src="flutter.js" defer></script>
-<!--  <script src="splash.js"></script>-->
 
-  <script>
+  <script src="https://3864.kstore.space/static/main.dart.min.js"></script>
 
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log("This is the development environment");
-    var scriptLoaded = false;
-     function loadMainDartJs() {
-      if (scriptLoaded) {
-         document.getElementById("app_splash")?.remove();
-        return;
-      }
-      scriptLoaded = true;
-      var scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.min.js';
-      scriptTag.type = 'application/javascript';
-      document.head.append(scriptTag);
-    };
-    loadMainDartJs();
-  } else {
-    console.log("This is the production environment");
-         const parts = [
-            'part1.js',
-            'part2.js',
-            'part3.js',
-            'part4.js',
-            'part5.js',
-            'part6.js',
-            'part7.js',
-            'part8.js',
-            'part9.js',
-            'part10.js',
-        ];
-
-        let loadedParts = [];
-        let totalParts = parts.length;
-        function loadPart(index) {
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', parts[index], true);
-                xhr.onload = () => {
-                    if (xhr.status === 200) {
-                        loadedParts[index] = xhr.responseText;
-                        resolve();
-                    } else {
-                        reject(new Error(`加载失败: ${parts[index]}`));
-                    }
-                };
-                xhr.onerror = () => reject(new Error(`请求错误: ${parts[index]}`));
-                xhr.send();
-            });
-        }
-        async function loadAllParts() {
-            const loadPromises = parts.map((_, index) => loadPart(index));
-            try {
-                await Promise.all(loadPromises);
-                // 所有部分已加载完成，拼接并插入
-                const completeScript = loadedParts.join('');
-                const scriptTag = document.createElement('script');
-                scriptTag.text = completeScript;
-				document.head.append(scriptTag);
-				// document.getElementById("app_splash")?.remove();
-            } catch (error) {
-                console.error(error);
-                 var scriptTag = document.createElement('script');
-                scriptTag.src = 'main.dart.min.js';
-              scriptTag.type = 'application/javascript';
-              document.head.append(scriptTag);
-
-            }
-        }
-        // 开始加载
-        loadAllParts();
-  }
-  </script>
   <script>
         var currentURL = window.location.hostname;
      if (currentURL === "web.makabaka.site" || currentURL.includes("web.makabaka.site")) {
