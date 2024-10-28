@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="视频下载去水印，玛卡巴卡下载器">
+  <meta name="keywords" content="去水印, 视频下载, 图集获取, 抖音, 小红书, 哔哩哔哩 玛卡巴卡下载器">
+  <meta name="referrer" content="never">
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="makabaka">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>玛卡巴卡</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      margin: 0;
+    }
+    #app_splash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white; /* 可选：添加一个背景颜色 */
+      z-index: 9999; /* 确保它处于最上层 */
+    }
+    #loaderView {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .dot {
+      width: 24px;
+      height: 24px;
+      background: #3ac;
+      border-radius: 100%;
+      display: inline-block;
+      animation: slide 1s infinite;
+    }
+    .dot:nth-child(1) {
+      animation-delay: 0.1s;
+      background: #32aacc;
+    }
+    .dot:nth-child(2) {
+      animation-delay: 0.2s;
+      background: #64aacc;
+    }
+    .dot:nth-child(3) {
+      animation-delay: 0.3s;
+      background: #96aacc;
+    }
+    .dot:nth-child(4) {
+      animation-delay: 0.4s;
+      background: #c8aacc;
+    }
+    .dot:nth-child(5) {
+      animation-delay: 0.5s;
+      background: #faaacc;
+    }
+    @-moz-keyframes slide {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.3;
+        transform: scale(2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @-webkit-keyframes slide {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.3;
+        transform: scale(2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @-o-keyframes slide {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.3;
+        transform: scale(2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes slide {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.3;
+        transform: scale(2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    </style>
+
+  <!-- This script adds the flutter initialization JS code -->
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    const serviceWorkerVersion = "2862427302";
+  </script>
+  <script src="flutter.js" defer></script>
+  <script>
+    console.log("111");
+    function isIPAddress(hostname) {
+    // IPv4 正则表达式
+    const ipv4Pattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    // IPv6 正则表达式
+    const ipv6Pattern = /^(?:[a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}$/;
+    return ipv4Pattern.test(hostname) || ipv6Pattern.test(hostname);
+   }
+  const hostname = window.location.hostname;
+   // if (isIPAddress(hostname) || hostname.includes('localhost')) {
+   //      console.log("This is the development environment");
+   //      function loadMainDartJs() {
+   //          var scriptTag = document.createElement('script');
+   //         scriptTag.src = 'main.dart.js';
+   //         scriptTag.defer = true;
+   //         scriptTag.type = 'application/javascript';
+   //         document.head.append(scriptTag);
+   //     }
+   //     loadMainDartJs();
+   // } else
+   {
+        console.log("This is the production environment");
+        const mainJsUrl = 'main.dart.min1.js'; // 主文件地址
+        const localStorageKey = 'cached_main_js'; // 缓存键，存储文件内容
+        const localStorageNameKey = 'cached_main_js_name'; // 缓存键，存储文件名称
+        const PART_NUMBER = '24102804';
+        const parts = [
+            `https://api.makabaka.site/cdn/${PART_NUMBER}/part1.js`,
+            `https://api.makabaka.site/cdn/${PART_NUMBER}/part2.js`,
+            `https://api.makabaka.site/cdn/${PART_NUMBER}/part3.js`,
+        ];
+        let loadedParts = [];
+        let totalParts = parts.length;
+        async function loadPart(index) {
+        try {
+            const response = await fetch(parts[index]);
+            if (response.ok) {
+                loadedParts[index] = await response.text();
+            } else {
+                throw new Error('加载失败');
+            }
+        } catch (error) {
+            console.error('请求错误', error);
+            handleLoadError(parts[index]);
+        }
+}
+        async function loadAllParts() {
+            const loadPromises = parts.map((_, index) => loadPart(index));
+            try {
+                await Promise.all(loadPromises);
+                // 所有部分已加载完成，拼接并插入
+                const completeScript = loadedParts.join('');
+                return completeScript; // 返回文件内容
+            } catch (error) {
+                console.error(error);
+                // 删除缓存
+                localStorage.removeItem(localStorageKey);
+                localStorage.removeItem(localStorageNameKey);
+                var scriptTag = document.createElement('script');
+                scriptTag.src = `https://api.makabaka.site/cdn/${PART_NUMBER}/main.dart.min.js`;
+                scriptTag.type = 'application/javascript';
+                document.head.append(scriptTag);
+            }
+        }
+
+        async function loadMainJs() {
+            try {
+                const cachedFile = localStorage.getItem(localStorageKey);
+                const cachedName = localStorage.getItem(localStorageNameKey);
+
+                // 检查缓存的名称是否与当前文件名称相同
+                if (cachedFile && cachedFile.length > 512000 && cachedName === mainJsUrl) {
+                    console.log('加载本地缓存的main.dart.min.js');
+                    insertScript(cachedFile);
+                } else {
+                    console.log('加载网络文件并缓存');
+                    // 加载网络文件内容
+                    const networkFileContent = await loadAllParts();
+                    // 将网络文件内容和名称缓存
+                    localStorage.setItem(localStorageKey, networkFileContent);
+                    localStorage.setItem(localStorageNameKey, mainJsUrl);
+                    insertScript(networkFileContent);
+                }
+            } catch (error) {
+                console.error(error);
+                console.log('加载网络文件error');
+                handleLoadError();
+            }
+        }
+
+        function insertScript(content) {
+            const scriptTag = document.createElement('script');
+            scriptTag.text = content;
+            scriptTag.defer = true;
+            document.head.append(scriptTag);
+        }
+
+        function handleLoadError() {
+            // 在加载失败时执行的操作
+            localStorage.removeItem(localStorageKey);
+            localStorage.removeItem(localStorageNameKey);
+            var scriptTag = document.createElement('script');
+            scriptTag.src = `https://api.makabaka.site/cdn/${PART_NUMBER}/main.dart.min.js`;
+            scriptTag.type = 'application/javascript';
+            scriptTag.defer = true;
+            document.head.append(scriptTag);
+        }
+        // 开始加载main.dart.min.js
+        loadMainJs();
+    }
+</script>
+  <script>
+        var currentURL = window.location.hostname;
+     if (currentURL === "web.makabaka.site" || currentURL.includes("web.makabaka.site")) {
+            // 创建一个新的 script 元素
+            var script = document.createElement('script');
+            script.src = "https://alys.makabaka.site/analytics";
+            script.setAttribute('data-website-id', '6973399a-351e-41f5-a609-68c66c888271');
+            script.defer = true;
+            // 将脚本添加到页面中
+            document.head.appendChild(script);
+     }
+    </script>
+
+</head>
+<body>
+<div id="app_splash">
+  <div id="loaderView">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+</div>
+</body>
+</html>
