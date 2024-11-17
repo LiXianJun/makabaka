@@ -25,7 +25,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="makabaka">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
@@ -131,7 +131,7 @@
   <!-- This script adds the flutter initialization JS code -->
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "648767758";
+    const serviceWorkerVersion = "597850683";
   </script>
   <script src="flutter.js" defer></script>
   <script>
@@ -146,120 +146,105 @@
   const hostname = window.location.hostname;
   const isDevEnvironment = isIPAddress(hostname) || hostname.includes('localhost');
 
- // if (isDevEnvironment) {
+  if (isDevEnvironment) {
     console.log("This is the development environment");
-
     function loadMainDartJs() {
       const scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.min.js';
+      scriptTag.src = 'main.dart.js';
       scriptTag.defer = true;
       document.head.append(scriptTag);
     }
 
-    loadMainDartJs()
+    loadMainDartJs();
 
-  // }
-  // else
-  // {
-  //   console.log("This is the production environment");
-  //
-  //   const mainJsUrl = 'main.dart.min5.js';
-  //   const localStorageKey = 'cached_main_js';
-  //   const localStorageNameKey = 'cached_main_js_name';
-  //   const PART_NUMBER = '24111701';
-  //   const parts = [
-  //     `/part1.js`,
-  //     `/part2.js`,
-  //     `/part3.js`,
-  //   ];
-  //   let loadedParts = [];
-  //
-  //
-  //   async function loadPart(index) {
-  //     try {
-  //       const response = await fetch(parts[index]);
-  //       if (response.ok) {
-  //         loadedParts[index] = await response.text();
-  //       } else {
-  //         throw new Error('加载失败');
-  //       }
-  //     } catch (error) {
-  //       console.error('请求错误', error);
-  //       handleLoadError();
-  //     }
-  //   }
-  //
-  //   async function loadAllParts() {
-  //     try {
-  //       await Promise.all(parts.map((_, index) => loadPart(index)));
-  //       return loadedParts.join('');
-  //     } catch (error) {
-  //       console.error(error);
-  //       clearCache();
-  //       fallbackToMainScript();
-  //     }
-  //   }
-  //
-  //   async function loadMainJs() {
-  //     try {
-  //       const cachedFile = localStorage.getItem(localStorageKey);
-  //       const cachedName = localStorage.getItem(localStorageNameKey);
-  //
-  //       if (cachedFile && cachedFile.length > 512000 && cachedName === mainJsUrl) {
-  //         console.log('加载本地缓存的main.dart.min.js');
-  //         insertScript(cachedFile);
-  //       } else {
-  //         console.log('加载网络文件并缓存');
-  //         const networkFileContent = await loadAllParts();
-  //         localStorage.setItem(localStorageKey, networkFileContent);
-  //         localStorage.setItem(localStorageNameKey, mainJsUrl);
-  //         insertScript(networkFileContent);
-  //       }
-  //     } catch (error) {
-  //       console.error('加载网络文件错误', error);
-  //       handleLoadError();
-  //     }
-  //   }
-  //
-  //   function insertScript(content) {
-  //     const scriptTag = document.createElement('script');
-  //     scriptTag.text = content;
-  //     scriptTag.defer = true;
-  //     document.head.append(scriptTag);
-  //   }
-  //
-  //   function clearCache() {
-  //     localStorage.removeItem(localStorageKey);
-  //     localStorage.removeItem(localStorageNameKey);
-  //   }
-  //
-  //   function fallbackToMainScript() {
-  //     const scriptTag = document.createElement('script');
-  //     scriptTag.src = `main.dart.min.js`;
-  //     scriptTag.type = 'application/javascript';
-  //     scriptTag.defer = true;
-  //     document.head.append(scriptTag);
-  //   }
-  //
-  //   function handleLoadError() {
-  //     clearCache();
-  //     fallbackToMainScript();
-  //   }
-  //   loadMainJs();
-  // }
+  }
+  else {
+    console.log("This is the production environment");
+
+    const mainJsUrl = 'main.dart.min8.js';
+    const localStorageKey = 'cached_main_js';
+    const localStorageNameKey = 'cached_main_js_name';
+    const PART_NUMBER = '24111701';
+    const parts = [
+      `/part1.js`,
+      `/part2.js`,
+      `/part3.js`,
+    ];
+    let loadedParts = [];
+
+    async function loadPart(index) {
+      try {
+        const response = await fetch(parts[index]);
+        if (response.ok) {
+          loadedParts[index] = await response.text();
+        } else {
+          throw new Error('加载失败');
+        }
+      } catch (error) {
+        console.error('请求错误', error);
+        handleLoadError();
+      }
+    }
+
+    async function loadAllParts() {
+      try {
+        await Promise.all(parts.map((_, index) => loadPart(index)));
+        return loadedParts.join('');
+      } catch (error) {
+        console.error(error);
+        clearCache();
+        fallbackToMainScript();
+      }
+    }
+
+    async function loadMainJs() {
+      try {
+        const cachedFile = localStorage.getItem(localStorageKey);
+        const cachedName = localStorage.getItem(localStorageNameKey);
+
+        if (cachedFile && cachedFile.length > 512000 && cachedName === mainJsUrl) {
+          console.log('加载本地缓存的main.dart.min.js');
+          insertScript(cachedFile);
+        } else {
+          console.log('加载网络文件并缓存');
+          const networkFileContent = await loadAllParts();
+          localStorage.setItem(localStorageKey, networkFileContent);
+          localStorage.setItem(localStorageNameKey, mainJsUrl);
+          insertScript(networkFileContent);
+        }
+      } catch (error) {
+        console.error('加载网络文件错误', error);
+        handleLoadError();
+      }
+    }
+
+    function insertScript(content) {
+      const scriptTag = document.createElement('script');
+      scriptTag.text = content;
+      scriptTag.defer = true;
+      document.head.append(scriptTag);
+    }
+
+    function clearCache() {
+      localStorage.removeItem(localStorageKey);
+      localStorage.removeItem(localStorageNameKey);
+    }
+
+    function fallbackToMainScript() {
+      const scriptTag = document.createElement('script');
+      scriptTag.src = `main.dart.min.js`;
+      scriptTag.type = 'application/javascript';
+      scriptTag.defer = true;
+      document.head.append(scriptTag);
+    }
+
+    function handleLoadError() {
+      clearCache();
+      fallbackToMainScript();
+    }
+    loadMainJs();
+  }
 </script>
-  <script>
-  //     var currentURL = window.location.hostname;
-  //  if (currentURL === "web.makabaka.site" || currentURL.includes("web.makabaka.site")) {
-  //         // 创建一个新的 script 元素
-  //         var script = document.createElement('script');
-  //         script.src = "https://alys.makabaka.site/analytics";
-  //         script.setAttribute('data-website-id', '6973399a-351e-41f5-a609-68c66c888271');
-  //         script.defer = true;
-  //         // 将脚本添加到页面中
-  //         document.head.appendChild(script);
-  //  }
-    </script>
 
 </head>
 <body>
