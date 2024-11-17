@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09d1cfba-841e-4512-b3b9-c3f6f2490179" name="Changes" comment="update24111705">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-    </list>
+    <list default="true" id="09d1cfba-841e-4512-b3b9-c3f6f2490179" name="Changes" comment="update24111706" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -113,7 +110,7 @@
       <updated>1731817390096</updated>
       <workItem from="1731817391818" duration="1121000" />
       <workItem from="1731822932923" duration="4349000" />
-      <workItem from="1731833707967" duration="3076000" />
+      <workItem from="1731833707967" duration="3455000" />
     </task>
     <task id="LOCAL-00001" summary="delete24111701">
       <option name="closed" value="true" />
@@ -163,7 +160,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731839343297</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="update24111706">
+      <option name="closed" value="true" />
+      <created>1731850032113</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731850032113</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -187,7 +192,8 @@
     <MESSAGE value="update24111703" />
     <MESSAGE value="update24111704" />
     <MESSAGE value="update24111705" />
-    <option name="LAST_COMMIT_MESSAGE" value="update24111705" />
+    <MESSAGE value="update24111706" />
+    <option name="LAST_COMMIT_MESSAGE" value="update24111706" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
